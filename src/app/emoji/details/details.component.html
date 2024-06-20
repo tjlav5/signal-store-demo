@@ -1,0 +1,13 @@
+<mat-card>
+  @if(store.selectedEntity(); as entity) {
+  <mat-card-header>
+    <mat-card-title>{{ entity.username }}</mat-card-title>
+  </mat-card-header>
+
+  <div class="emoji mat-display-large">{{ entity.emoji }}</div>
+  }@else {
+  <mat-card-content>
+    <p>Select a user</p>
+  </mat-card-content>
+  }
+</mat-card>

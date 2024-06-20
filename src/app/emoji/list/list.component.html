@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-content>
+    @if (store.isPending()) { loading! } @else if (store.isFulfilled()) {
+    <mat-nav-list>
+      @for (emoji of store.entities(); track emoji.username) {
+      <a
+        mat-list-item
+        [routerLink]="[emoji.username]"
+        routerLinkActive
+        #active="routerLinkActive"
+        [activated]="active.isActive"
+        >{{ emoji.username }}</a
+      >
+      }
+    </mat-nav-list>
+    }
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button>Load more</button>
+  </mat-card-actions>
+</mat-card>

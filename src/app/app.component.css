@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  padding: 24px;
+  gap: 12px;
+
+  emoji-list {
+    flex: 0 0 300px;
+  }
+
+  .details {
+    flex: 2 0 calc(300px - 60px);
+  }
+}

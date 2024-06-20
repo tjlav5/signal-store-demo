@@ -1,0 +1,7 @@
+@if (!isMobile() || !isSelected()) {
+<emoji-list />
+} @if (!isMobile() || isSelected()) {
+<div class="details">
+  <router-outlet />
+</div>
+}
