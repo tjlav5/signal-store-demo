@@ -1,10 +1,10 @@
-import { patchState, signalStore, withMethods } from "@ngrx/signals";
-import { addEntities, addEntity, withEntities } from "@ngrx/signals/entities";
-import { EmojiEntry, EmojiService } from "../backend/slow-backend-service";
-import { withLoadingState } from "./with_loading_state";
-import { withPagination } from "./with_pagination";
-import { withSelection } from "./with_selection";
-import { inject } from "@angular/core";
+import { patchState, signalStore, withMethods } from '@ngrx/signals';
+import { addEntities, addEntity, withEntities } from '@ngrx/signals/entities';
+import { EmojiEntry, EmojiService } from '../backend/slow-backend-service';
+import { withLoadingState } from './with_loading_state';
+import { withPagination } from './with_pagination';
+import { withSelection } from './with_selection';
+import { inject } from '@angular/core';
 
 export const EmojiStore = signalStore(
   withEntities<EmojiEntry>(),
@@ -12,22 +12,23 @@ export const EmojiStore = signalStore(
   withPagination(),
   withSelection(),
   withMethods((store, service = inject(EmojiService)) => ({
-    loadList: () => {
+    loadList: async () => {
       patchState(store, { requestStatus: 'pending' });
-      service.list().then((r) => {
-        patchState(store, addEntities(r, { idKey: 'username' }), { requestStatus: 'fulfilled' })
-      }).catch(() => {
-        patchState(store, { requestStatus: { error: 'nah!' } })
-      })
+      try {
+        const emojis = await service.list();
+        patchState(store, addEntities(emojis.data, { idKey: 'username' }), {
+          requestStatus: 'fulfilled',
+        });
+      } catch {
+        patchState(store, { requestStatus: { error: 'nah!' } });
+      }
     },
     addEmoji: (emoji: EmojiEntry) => {
       service.add(emoji);
       patchState(store, addEntity(emoji, { idKey: 'username' }));
-    }
-  })),
+    },
+  }))
 );
-
-
 
 /** 
  * 

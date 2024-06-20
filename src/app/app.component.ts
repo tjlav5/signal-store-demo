@@ -1,26 +1,24 @@
-import { Component, Signal, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { EmojiStore } from './store/store';
-import { MatButton } from '@angular/material/button';
+
+import { MediaMatcher } from '@angular/cdk/layout';
+import { MatCard } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
 import {
   MatDrawer,
   MatDrawerContainer,
-  MatDrawerContent,
-  MatSidenav,
-  MatSidenavContainer,
-  MatSidenavContent,
+  MatDrawerContent
 } from '@angular/material/sidenav';
-import { MatNavList } from '@angular/material/list';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { MatDivider } from '@angular/material/divider';
-import { EmojiListComponent } from './emoji/list/list.component';
 import { EmojiDetailsComponent } from './emoji/details/details.component';
-import { MatCard } from '@angular/material/card';
-
+import { EmojiListComponent } from './emoji/list/list.component';
+import {EmojiService} from './backend/slow-backend-service'
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    FormsModule,
     RouterOutlet,
     MatDrawer,
     MatDrawerContainer,
@@ -37,8 +35,9 @@ import { MatCard } from '@angular/material/card';
 export class AppComponent {
   private readonly store = inject(EmojiStore);
   protected readonly isMobile = signal(false);
+  protected readonly backend = inject(EmojiService)
 
-  constructor() {
+  constructor() {    
     const mobileQuery = inject(MediaMatcher).matchMedia('(max-width: 600px)');
     this.isMobile.set(mobileQuery.matches);
     mobileQuery.addEventListener('change', () => {

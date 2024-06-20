@@ -1,6 +1,8 @@
 <mat-card>
   <mat-card-content>
-    @if (store.isPending()) { loading! } @else if (store.isFulfilled()) {
+    @if (store.isPending()) {
+    <mat-spinner color="accent" />
+    } @else if (store.isFulfilled()) {
     <mat-nav-list>
       @for (emoji of store.entities(); track emoji.username) {
       <a

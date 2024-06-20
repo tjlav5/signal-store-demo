@@ -8,6 +8,7 @@ import {
 } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { MatListItem, MatNavList } from '@angular/material/list';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'emoji-list',
@@ -22,6 +23,7 @@ import { MatListItem, MatNavList } from '@angular/material/list';
     MatCardActions,
     MatCardContent,
     MatButton,
+    MatProgressSpinner,
   ],
 })
 export class EmojiListComponent {
