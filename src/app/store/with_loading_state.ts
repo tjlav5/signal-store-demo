@@ -1,7 +1,16 @@
 import { computed } from '@angular/core';
-import { signalStoreFeature, withComputed, withState } from '@ngrx/signals';
+import {
+  PartialStateUpdater,
+  signalStoreFeature,
+  withComputed,
+  withState,
+} from '@ngrx/signals';
 
-export type RequestStatus = 'idle' | 'pending' | 'fulfilled' | { error: string };
+export type RequestStatus =
+  | 'idle'
+  | 'pending'
+  | 'fulfilled'
+  | { error: string };
 export type RequestStatusState = { requestStatus: RequestStatus };
 
 export function withLoadingState() {
@@ -16,4 +25,18 @@ export function withLoadingState() {
       }),
     }))
   );
+}
+
+export function setPending(): PartialStateUpdater<RequestStatusState> {
+  return () => ({ requestStatus: 'pending' });
+}
+
+export function setFulfilled(): PartialStateUpdater<RequestStatusState> {
+  return () => ({ requestStatus: 'fulfilled' });
+}
+
+export function setError(
+  error: string
+): PartialStateUpdater<RequestStatusState> {
+  return () => ({ requestStatus: { error } });
 }

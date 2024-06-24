@@ -30,6 +30,6 @@ export class EmojiListComponent {
   protected readonly store = inject(EmojiStore);
 
   constructor() {
-    this.store.loadList();
+    this.store.list();
   }
 }

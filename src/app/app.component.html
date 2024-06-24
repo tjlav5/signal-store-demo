@@ -5,6 +5,12 @@
     <input type="checkbox" [ngModel]="backend.shouldHaveDelay()"
       (ngModelChange)="backend.shouldHaveDelay.set($event)" />
   </label>
+  <label>
+    Enable errors
+    <input type="checkbox" [ngModel]="backend.shouldHaveError()"
+      (ngModelChange)="backend.shouldHaveError.set($event)" />
+  </label>
+  
   <emoji-list />
 </div>
 } @if (!isMobile() || isSelected()) {

@@ -1,75 +1,60 @@
 import { patchState, signalStore, withMethods } from '@ngrx/signals';
-import { addEntities, addEntity, withEntities } from '@ngrx/signals/entities';
+import {
+  addEntities,
+  addEntity,
+  removeEntity,
+  withEntities,
+} from '@ngrx/signals/entities';
 import { EmojiEntry, EmojiService } from '../backend/slow-backend-service';
-import { withLoadingState } from './with_loading_state';
-import { withPagination } from './with_pagination';
-import { withSelection } from './with_selection';
 import { inject } from '@angular/core';
+import {
+  setError,
+  setFulfilled,
+  setPending,
+  withLoadingState,
+} from './with_loading_state';
+import { withSelection } from './with_selection';
 
+/**
+ *
+ */
 export const EmojiStore = signalStore(
-  withEntities<EmojiEntry>(),
-  withLoadingState(),
-  withPagination(),
-  withSelection(),
-  withMethods((store, service = inject(EmojiService)) => ({
-    loadList: async () => {
-      patchState(store, { requestStatus: 'pending' });
-      try {
-        const emojis = await service.list();
-        patchState(store, addEntities(emojis.data, { idKey: 'username' }), {
-          requestStatus: 'fulfilled',
-        });
-      } catch {
-        patchState(store, { requestStatus: { error: 'nah!' } });
-      }
-    },
-    addEmoji: (emoji: EmojiEntry) => {
-      service.add(emoji);
-      patchState(store, addEntity(emoji, { idKey: 'username' }));
-    },
-  }))
-);
-
-/** 
- * 
- * export const EmojiStore = signalStore(
   // Provide the store globally
   { providedIn: 'root' },
-  withState(initialState),
-  withMethods((store, emojiService = inject(EmojiService)) => ({
-    async loadEmojis(): Promise<void> {
-      patchState(store, { isLoading: true, error: null });
+  withEntities<EmojiEntry>(),
+  withLoadingState(),
+  withSelection(),
+  withMethods((store, service = inject(EmojiService)) => ({
+    async list(nextPageToken?: string) {
+      patchState(store, setPending());
 
       try {
-        const emojis = await emojiService.list();
-        patchState(store, { emojis, isLoading: false });
+        const emojis = await service.list(nextPageToken);
+
+        patchState(
+          store,
+          addEntities(emojis.data, { idKey: 'username' }),
+          setFulfilled()
+        );
       } catch (error) {
-        patchState(store, { isLoading: false, error });
+        patchState(store, setError('nah!'));
       }
     },
-    async addEmoji(entry: EmojiEntry): Promise<void> {
-      patchState(store, { isLoading: true, error: null });
-
+    async add(entity: EmojiEntry) {
       try {
-        await emojiService.add(entry);
-        const emojis = await emojiService.list();
-        patchState(store, { emojis, isLoading: false });
+        const emoji = await service.add(entity);
+        patchState(store, addEntity(emoji, { idKey: 'username' }));
       } catch (error) {
-        patchState(store, { isLoading: false, error });
+        patchState(store, setError('nah!'));
       }
     },
-    async deleteEmoji(entry: EmojiEntry): Promise<void> {
-      patchState(store, { isLoading: true, error: null });
-
+    async delete(username: string) {
       try {
-        await emojiService.delete(entry);
-        const emojis = await emojiService.list();
-        patchState(store, { emojis, isLoading: false });
+        await service.delete(username);
+        patchState(store, removeEntity(username));
       } catch (error) {
-        patchState(store, { isLoading: false, error });
+        patchState(store, setError('nah!'));
       }
-    }
+    },
   }))
 );
-
- */

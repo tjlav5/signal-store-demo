@@ -10,4 +10,11 @@
     <p>Select a user</p>
   </mat-card-content>
   }
+
+  <mat-card-content>
+    <input [(ngModel)]="username">
+    <input [(ngModel)]="emoji">
+    
+    <button (click)="addUser()">Add a user</button>
+  </mat-card-content>
 </mat-card>
